@@ -58,6 +58,38 @@ $user = User::getById($_SESSION['user']['id']);
             </strong>
         </td>
     </tr>
+    <tr>
+        <td>Birthdate</td>
+        <td>
+            <strong>
+                <?php echo $user->getbirthdate();?>
+            </strong>
+        </td>
+    </tr>
+    <tr>
+        <td>Gender</td>
+        <td>
+            <strong>
+                <?php echo $user->getgender();?>
+            </strong>
+        </td>
+    </tr>
+    <tr>
+        <td>Address</td>
+        <td>
+            <strong>
+                <?php echo $user->getaddress();?>
+            </strong>
+        </td>
+    </tr>
+    <tr>
+        <td>Contact Number</td>
+        <td>
+            <strong>
+                <?php echo $user->getcontact_number();?>
+            </strong>
+        </td>
+    </tr>
 </table>
 
 <h4>Ecclesiastes 3:1-8</h4>

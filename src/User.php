@@ -10,7 +10,11 @@ class User
 	protected $first_name;
 	protected $last_name;
 	protected $email;
-	protected $pass;
+	protected $password;
+	protected $birthdate;
+	protected $gender;
+	protected $address;
+	protected $contact_number;
 	protected $created_at;
 
 	public function getId()
@@ -37,6 +41,30 @@ class User
 	{
 		return $this->email;
 	}
+	public function getpassword()
+	{
+		return $this->password;
+	}
+	public function getconfirm_password()
+	{
+		return $this->password;
+	}
+	public function getbirthdate()
+	{
+		return $this->birthdate;
+	}
+	public function getgender()
+	{
+		return $this->gender;
+	}
+	public function getaddress()
+	{
+		return $this->address;
+	}
+	public function getcontact_number()
+	{
+		return $this->contact_number;
+	}
 
 	public static function getById($id)
 	{
@@ -62,14 +90,16 @@ class User
 	}
 
 	public static function hashPassword($password)
-	{
-		$hashed_password = null;
-		// DO SOMETHING HERE TO HASH THE PASSWORD
-		// ...
-		return $hashed_password;
-	}
+{
+    
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-	public static function attemptLogin($email, $pass)
+    // Return the hashed password
+    return $hashed_password;
+}
+
+
+	public static function attemptLogin($email, $password)
 	{
 		global $conn;
 
@@ -83,10 +113,11 @@ class User
 			$statement = $conn->prepare($sql);
 
 			// Perform password hash verification (if necessary)
+		
 
 			$statement->execute([
 				'email' => $email,
-				'pass' => $pass
+				'password' => $password,
 			]);
 			$result = $statement->fetchObject('App\User');
 			return $result;
@@ -97,7 +128,7 @@ class User
 		return null;
 	}
 
-	public static function register($first_name, $last_name, $email, $password)
+	public static function register($first_name, $last_name, $email, $password,$birthdate,$gender,$address,$contact_number)
 	{
 		global $conn;
 
@@ -106,8 +137,8 @@ class User
 			// ..
 
 			$sql = "
-				INSERT INTO users (first_name, last_name, email, pass)
-				VALUES ('$first_name', '$last_name', '$email', '$password')
+				INSERT INTO users (first_name, last_name, email, password, birthdate, gender, address, contact_number)
+				VALUES ('$first_name', '$last_name', '$email', '$password', '$birthdate', '$gender', '$address', '$contact_number')
 			";
 			$conn->exec($sql);
 			// echo "<li>Executed SQL query " . $sql;
@@ -126,7 +157,7 @@ class User
 		try {
 			foreach ($users as $user) {
 				// Hash the password before inserting it to DB
-				// ..
+				$hashed_password = self::hashPassword($user['password']);
 
 				$sql = "
 					INSERT INTO users
@@ -134,7 +165,11 @@ class User
 						first_name=\"{$user['first_name']}\",
 						last_name=\"{$user['last_name']}\",
 						email=\"{$user['email']}\",
-						pass=\"{$user['pass']}\"
+						password=\"{$user['password']}\",
+						birthdate=\"{$user['birthdate']}\",
+						gender=\"{$user['gender']}\",
+						adddress=\"{$user['address']}\",
+						contact_number=\"{$user['contact_number']}\"
 				";
 				$conn->exec($sql);
 				// echo "<li>Executed SQL query " . $sql;

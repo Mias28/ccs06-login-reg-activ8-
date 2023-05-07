@@ -11,7 +11,14 @@ try {
 	$last_name = $_POST['last_name'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
-	$result = User::register($first_name, $last_name, $email, $password);
+	$birthdate= $_POST['birthdate'];
+	$gender = $_POST['gender'];
+	$address = $_POST['address'];
+	$contact_number = $_POST['contact_number'];
+	
+	$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+	$result = User::register($first_name, $last_name, $email, $hashed_password, $birthdate, $gender, $address, $contact_number);
 
 	if ($result) {
 
@@ -21,7 +28,11 @@ try {
 		$_SESSION['user'] = [
 			'id' => $result,
 			'fullname' => $first_name . ' ' . $last_name,
-			'email' => $email
+			'email' => $email,
+			'birthdate' => $birthdate,
+			'gender' => $gender,
+			'address' => $address,
+			'contact_number' => $contact_number,
 		];
 		header('Location: index.php');
 	}
@@ -30,4 +41,3 @@ try {
 	error_log($e->getMessage());
 	echo "<h1 style='color: red'>" . $e->getMessage() . "</h1>";
 }
-
